@@ -1,0 +1,12 @@
+name: BattlePlugin
+version: '${project.version}'
+main: com.github.kumo0621.battleplugin.BattlePlugin
+api-version: 1.16
+commands:
+  battlePlugin:
+    aliases: battle
+    permission: battlePlugin
+
+permissions:
+  battlePlugin:
+    default: true

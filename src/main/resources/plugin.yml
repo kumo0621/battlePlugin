@@ -6,7 +6,17 @@ commands:
   battlePlugin:
     aliases: battle
     permission: battlePlugin
-
+  startBattle:
+     aliases: battleStart
+    permission: battlePlugin
+  endBattle:
+    aliases: battleend
+    permission: battlePlugin
 permissions:
   battlePlugin:
     default: true
+  startBattle:
+    default: true
+  endBattle:
+    default: true
+

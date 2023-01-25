@@ -31,61 +31,21 @@ public final class BattlePlugin extends JavaPlugin implements org.bukkit.event.L
     }
 
     Map<Player, String> mapList = new HashMap<>();
-    @EventHandler
-    public void onChatClick(AsyncPlayerChatEvent event) {
-        String message = event.getMessage();
-        Player up = event.getPlayer();
-        for (Map.Entry<Player, String> entry : mapList.entrySet()) {
-            if (entry.getValue().startsWith(name)) {
-                if (message.equals("参加")) {
-                    // プレイヤーが「example」というチャットをクリックした時の処理
-                    Player set = entry.getKey();
-                    Player set2 = Objects.requireNonNull(Bukkit.getServer().getPlayer(entry.getValue()));
-                    battleList.add(String.valueOf(set));
-                    battleList.add(String.valueOf(set2));
-                    PlayerInventory inventory = Objects.requireNonNull(set).getInventory();
-                    PlayerInventory inventory2 = Objects.requireNonNull(set2).getInventory();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (int i = 3; i > 0; i--) {
-                                set.sendTitle(i + "", "", 10, 70, 20);
-                                set2.sendTitle(i + "", "", 10, 70, 20);
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            set.sendTitle("START", "", 10, 70, 20);
-                            set2.sendTitle("START", "", 10, 70, 20);
-                            inventory.addItem(new ItemStack(Material.STONE_SWORD, 1), new ItemStack(Material.BOW, 1), new ItemStack(Material.COOKED_BEEF, 64), new ItemStack(Material.ARROW, 10));
-                            inventory2.addItem(new ItemStack(Material.STONE_SWORD, 1), new ItemStack(Material.BOW, 1), new ItemStack(Material.COOKED_BEEF, 64), new ItemStack(Material.ARROW, 10));
-                        }
-                    }).start();
-                    event.setCancelled(true);
-                    mapList.remove(entry.getKey(), entry.getValue());
-                } else if (message.equals("拒否")) {
-                    up.sendMessage("拒否しました。");
-                    event.setCancelled(true);
-                }
-            }
-        }
-    }
+
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         Player kill = event.getEntity().getKiller();
-        String name =event.getEntity().getName();
-        if(battleList.contains(name)) {
-                player.sendMessage("あなたは負けました。");
+        String name = event.getEntity().getName();
+        if (battleList.contains(name)) {
+            player.sendMessage("あなたは負けました。");
 
-                if (kill != null) {
-                    Objects.requireNonNull(kill).sendMessage("あなたは勝ちました。");
-                }
+            if (kill != null) {
+                Objects.requireNonNull(kill).sendMessage("あなたは勝ちました。");
             }
         }
+    }
 
     List<String> battleList = new ArrayList<>();
 
@@ -105,10 +65,46 @@ public final class BattlePlugin extends JavaPlugin implements org.bukkit.event.L
                         Objects.requireNonNull(name).sendMessage(sender.getName() + "さんに戦いを申し込まれた");
                         Objects.requireNonNull(name).sendMessage("参加する場合は参加とチャットにお書きください。");
                         Objects.requireNonNull(name).sendMessage("拒否する場合は拒否とチャットにお書きください。");
-                    }else{
+                    } else {
                         sender.sendMessage("自分とは戦えません");
                     }
                 }
+            }
+        } else if (command.getName().equals("startBattle")) {
+            if (sender instanceof Player) {
+                for (Map.Entry<Player, String> entry : mapList.entrySet()) {
+                    if (entry.getValue().startsWith(name)) {
+                        Player set = entry.getKey();
+                        Player set2 = Objects.requireNonNull(Bukkit.getServer().getPlayer(entry.getValue()));
+                        battleList.add(String.valueOf(set));
+                        battleList.add(String.valueOf(set2));
+                        PlayerInventory inventory = Objects.requireNonNull(set).getInventory();
+                        PlayerInventory inventory2 = Objects.requireNonNull(set2).getInventory();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = 3; i > 0; i--) {
+                                    set.sendTitle(i + "", "", 10, 70, 20);
+                                    set2.sendTitle(i + "", "", 10, 70, 20);
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                set.sendTitle("START", "", 10, 70, 20);
+                                set2.sendTitle("START", "", 10, 70, 20);
+                                inventory.addItem(new ItemStack(Material.STONE_SWORD, 1), new ItemStack(Material.BOW, 1), new ItemStack(Material.COOKED_BEEF, 64), new ItemStack(Material.ARROW, 10));
+                                inventory2.addItem(new ItemStack(Material.STONE_SWORD, 1), new ItemStack(Material.BOW, 1), new ItemStack(Material.COOKED_BEEF, 64), new ItemStack(Material.ARROW, 10));
+                            }
+                        }).start();
+                        mapList.remove(entry.getKey(), entry.getValue());
+                    }
+                }
+            }
+        } else if (command.getName().equals("startBattle")) {
+            if (sender instanceof Player) {
+                sender.sendMessage("拒否しました。");
             }
         }
         return super.onCommand(sender, command, label, args);

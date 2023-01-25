@@ -1,5 +1,7 @@
 package com.github.kumo0621.battleplugin;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -51,7 +53,7 @@ public final class BattlePlugin extends JavaPlugin implements org.bukkit.event.L
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (command.getName().equals("battlePlugin")) {
+        if (command.getName().equals("battle")) {
             if (sender instanceof Player) {
                 if (args.length == 0) {
                     sender.sendMessage("戦い相手を指定してください。");
@@ -63,8 +65,7 @@ public final class BattlePlugin extends JavaPlugin implements org.bukkit.event.L
                         name = args[0];
                         Player name = Bukkit.getServer().getPlayer(args[0]);
                         Objects.requireNonNull(name).sendMessage(sender.getName() + "さんに戦いを申し込まれた");
-                        Objects.requireNonNull(name).sendMessage("参加する場合は参加とチャットにお書きください。");
-                        Objects.requireNonNull(name).sendMessage("拒否する場合は拒否とチャットにお書きください。");
+                        Objects.requireNonNull(name).sendMessage(Component.text().append(Component.text("[参加]").clickEvent(ClickEvent.runCommand("/startBattle"))).append(Component.text("  ")).append(Component.text("[拒否]").clickEvent(ClickEvent.runCommand("/endBattle"))));
                     } else {
                         sender.sendMessage("自分とは戦えません");
                     }
@@ -102,7 +103,7 @@ public final class BattlePlugin extends JavaPlugin implements org.bukkit.event.L
                     }
                 }
             }
-        } else if (command.getName().equals("startBattle")) {
+        } else if (command.getName().equals("endBattle")) {
             if (sender instanceof Player) {
                 sender.sendMessage("拒否しました。");
             }

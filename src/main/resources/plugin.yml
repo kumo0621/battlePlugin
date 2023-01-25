@@ -3,20 +3,15 @@ version: '${project.version}'
 main: com.github.kumo0621.battleplugin.BattlePlugin
 api-version: 1.16
 commands:
-  battlePlugin:
-    aliases: battle
-    permission: battlePlugin
+  battle:
+    permission: battle.invite
   startBattle:
-     aliases: battleStart
-    permission: battlePlugin
+    permission: battle.accept
   endBattle:
-    aliases: battleend
-    permission: battlePlugin
+    permission: battle.accept
 permissions:
-  battlePlugin:
+  battle.invite:
     default: true
-  startBattle:
-    default: true
-  endBattle:
+  battle.accept:
     default: true
 
